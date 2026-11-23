@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boka Seafood</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0E5F63">
+  <script>
+    /* Boka Seafood is a one-page site. Addresses like /menu, /meni, /galerija
+       or /rezervacija don't exist as separate pages, so this page sends the
+       visitor to the matching section of the home page. Hosts such as Netlify
+       and GitHub Pages show this file automatically for unknown addresses;
+       on Apache/cPanel the .htaccess file does the same. */
+    (function () {
+      var map = {
+        farm: 'farm', farma: 'farm', about: 'farm', 'o-nama': 'farm', onama: 'farm', story: 'farm', prica: 'farm',
+        menu: 'menu', meni: 'menu', jelovnik: 'menu', 'cjenovnik': 'menu', cijene: 'menu', prices: 'menu',
+        tour: 'tour', tura: 'tour', obilazak: 'tour', 'obilazak-farme': 'tour', 'farm-tour': 'tour', izlet: 'tour',
+        gallery: 'gallery', galerija: 'gallery', photos: 'gallery', slike: 'gallery', fotografije: 'gallery',
+        visit: 'visit', lokacija: 'visit', location: 'visit', kontakt: 'visit', contact: 'visit', 'radno-vrijeme': 'visit', hours: 'visit',
+        reserve: 'reserve', reservation: 'reserve', reservations: 'reserve', booking: 'reserve', book: 'reserve',
+        rezervacija: 'reserve', rezervacije: 'reserve', rezervisi: 'reserve', 'slobodni-stolovi': 'reserve', availability: 'reserve', raspolozivost: 'reserve'
+      };
+      var parts = location.pathname.toLowerCase().replace(/\.html?$/, '').split('/').filter(Boolean);
+      var key = parts[parts.length - 1] || '';
+      var hash = map[key] ? '#' + map[key] : '';
+      location.replace('/' + hash);
+    })();
+  </script>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0A4649;color:#fff;font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;text-align:center;padding:24px}
+    a{color:#F4D160}
+  </style>
+</head>
+<body>
+  <p>Boka Seafood · <a href="/">Početna / Home</a></p>
+</body>
+</html>
