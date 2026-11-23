@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://www.bokaseafood.me/</loc>
-    <lastmod>2026-11-22</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.bokaseafood.me/"/>
-    <xhtml:link rel="alternate" hreflang="sr-ME" href="https://www.bokaseafood.me/me/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bokaseafood.me/"/>
+    <loc>https://www.bokaseafood.com/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bokaseafood.com/"/>
+    <xhtml:link rel="alternate" hreflang="sr-ME" href="https://www.bokaseafood.com/me/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bokaseafood.com/"/>
   </url>
   <url>
-    <loc>https://www.bokaseafood.me/me/</loc>
-    <lastmod>2026-11-22</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.bokaseafood.me/"/>
-    <xhtml:link rel="alternate" hreflang="sr-ME" href="https://www.bokaseafood.me/me/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bokaseafood.me/"/>
+    <loc>https://www.bokaseafood.com/me/</loc>
+    <lastmod>2026-11-23</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.bokaseafood.com/"/>
+    <xhtml:link rel="alternate" hreflang="sr-ME" href="https://www.bokaseafood.com/me/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.bokaseafood.com/"/>
   </url>
 </urlset>

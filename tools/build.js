@@ -20,7 +20,7 @@ const path = require('path');
 const vm = require('vm');
 
 /* ---- SITE SETTINGS: change SITE to the real domain before going live ---- */
-const SITE = 'https://www.bokaseafood.me';        // ← your domain, no trailing slash
+const SITE = 'https://www.bokaseafood.com';        // ← your domain, no trailing slash
 const RESTAURANT = {
   name: 'Boka Seafood',
   phone: '+382 67 480 655',

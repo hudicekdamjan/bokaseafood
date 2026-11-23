@@ -320,6 +320,10 @@ body.menu-open .nav .brand__mark{filter:invert(1)}
 .dots button::before{content:"";width:28px;height:2px;background:rgba(255,255,255,.35);transition:background .3s,width .3s}
 .dots button[aria-selected="true"]::before{background:var(--sun);width:40px}
 
+.review-cta{margin-top:26px;gap:.6em}
+.review-cta svg{width:18px;height:18px;fill:currentColor}
+@media (max-width:639px){.review-cta{width:100%;white-space:normal;letter-spacing:.08em;text-align:center;line-height:1.35}}
+
 /* ---------- Reserve ---------- */
 .reserve{display:grid;gap:clamp(36px,5vw,80px);padding:clamp(80px,10vw,140px) var(--gutter);background:var(--sand)}
 .reserve__info{max-width:520px}

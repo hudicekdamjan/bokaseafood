@@ -92,7 +92,7 @@
     const time = $('#f-time'), guests = $('#f-guests');
     if (!time || !guests) return;
     const tv = time.value, gv = guests.value, slots = [];
-    for (let h = 12; h <= 22; h++) for (const m of ['00', '30']) { if (h === 22 && m === '30') break; slots.push(`${h}:${m}`); }
+    for (let h = 11; h <= 19; h++) for (const m of ['00', '30']) slots.push(`${h}:${m}`);   // 11:00 – 19:30
     time.innerHTML = '<option value="">—</option>' + slots.map((x) => `<option>${x}</option>`).join('');
     const word = (n) => n === 1 ? t('guest') : (lang === 'me' && n >= 2 && n <= 4 ? t('guests24') : t('guests'));
     guests.innerHTML = Array.from({ length: 12 }, (_, i) => `<option value="${i + 1}">${i + 1} ${word(i + 1)}</option>`).join('')
