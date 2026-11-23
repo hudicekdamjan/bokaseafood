@@ -13,13 +13,15 @@
   /* ---------------- Language ---------------- */
   /* Each language has its own page: / (English) and /me/ (Montenegrin).
      The page's <html lang> says which one this is; data-root is the path back to the site root. */
-  let lang = (html.lang || '').toLowerCase().startsWith('sr') ? 'me' : 'en';
+  const hl = (html.lang || '').toLowerCase();
+  let lang = hl.startsWith('sr') ? 'me' : hl.startsWith('ru') ? 'ru' : 'en';
+  const LANG_IDX = { en: 0, me: 1, ru: 2 };
   const ROOT = html.dataset.root || '';
-  const L = () => (lang === 'me' ? 1 : 0);
+  const L = () => LANG_IDX[lang];
   const t = (k) => (I18N[lang] && I18N[lang][k]) || I18N.en[k] || '';
 
   function applyLang() {
-    html.lang = lang === 'me' ? 'sr-Latn-ME' : 'en';
+    html.lang = { en: 'en', me: 'sr-Latn-ME', ru: 'ru' }[lang];
     $$('[data-i18n]').forEach((el) => { const v = t(el.dataset.i18n); if (v) el.textContent = v; });
     $$('[data-i18n-html]').forEach((el) => { const v = t(el.dataset.i18nHtml); if (v) el.innerHTML = v; });
     $$('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
@@ -27,7 +29,8 @@
   }
   $$('[data-lang]').forEach((b) => b.addEventListener('click', () => {
     if (b.dataset.lang === lang) return;
-    location.href = (b.dataset.lang === 'me' ? ROOT + 'me/' : (ROOT || './')) + location.hash;
+    const dest = { en: ROOT || './', me: ROOT + 'me/', ru: ROOT + 'ru/' }[b.dataset.lang];
+    location.href = dest + location.hash;
   }));
 
   /* ---------------- Contact ---------------- */
@@ -94,7 +97,7 @@
     const tv = time.value, gv = guests.value, slots = [];
     for (let h = 11; h <= 19; h++) for (const m of ['00', '30']) slots.push(`${h}:${m}`);   // 11:00 – 19:30
     time.innerHTML = '<option value="">—</option>' + slots.map((x) => `<option>${x}</option>`).join('');
-    const word = (n) => n === 1 ? t('guest') : (lang === 'me' && n >= 2 && n <= 4 ? t('guests24') : t('guests'));
+    const word = (n) => n === 1 ? t('guest') : (lang !== 'en' && n >= 2 && n <= 4 ? t('guests24') : t('guests'));
     guests.innerHTML = Array.from({ length: 12 }, (_, i) => `<option value="${i + 1}">${i + 1} ${word(i + 1)}</option>`).join('')
       + `<option value="12+">12+ ${t('guests')}</option>`;
     time.value = tv; guests.value = gv || '2';
@@ -143,10 +146,11 @@
   function fillCountries() {
     const sel = $('#f-cc'); if (!sel) return;
     const keep = sel.value || guessCountry();
-    const name = (c) => c[L() + 2];
+    let ruNames = null; try { ruNames = new Intl.DisplayNames(['ru'], { type: 'region' }); } catch (e) {}
+    const name = (c) => (lang === 'ru' ? ((ruNames && ruNames.of(c[0] === 'XK' ? 'XK' : c[0])) || c[2]) : c[L() + 2]);
     const opt = (c) => `<option value="${c[0]}">${name(c)} (+${c[1]})</option>`;
     const rest = COUNTRIES.filter((c) => !TOP.includes(c[0]))
-      .sort((a, b) => name(a).localeCompare(name(b), lang === 'me' ? 'sr-Latn' : 'en'));
+      .sort((a, b) => name(a).localeCompare(name(b), ({ en: 'en', me: 'sr-Latn', ru: 'ru' })[lang]));
     sel.innerHTML = `<optgroup label="${t('ccTop')}">${TOP.map((i) => opt(byIso[i])).join('')}</optgroup>`
       + `<optgroup label="${t('ccAll')}">${rest.map(opt).join('')}</optgroup>`;
     sel.value = keep;
@@ -186,7 +190,7 @@
       const [y, mo, da] = d.date.split('-');
       const lines = [
         t('waAsk'), '',
-        `${t('fDate')}: ${da}.${mo}.${y}.`,
+        `${t('fDate')}: ${da}.${mo}.${y}${lang === 'ru' ? '' : '.'}`,
         `${t('fTime')}: ${d.time}`,
         `${t('fGuests')}: ${d.guests}`,
         `${t('fName')}: ${d.name}`,

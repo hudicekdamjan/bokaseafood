@@ -2,6 +2,7 @@
    BOKA SEAFOOD — styles
    Palette and fonts are defined once below in :root. Change them there.
    ===================================================================== */
+:root:lang(ru){--f-display:'Forum','Marcellus','Times New Roman',serif}
 :root{
   color-scheme:light dark;   /* site follows the device: day or night colours */
   /* Boka Sea Food palette: Deep Blue #0B2D5B · Turquoise #00B4DB · Sea Foam #A7E3F4 · Sand White #F8FAFC · Sand Gold #D4AF7C */

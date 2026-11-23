@@ -20,7 +20,12 @@ const path = require('path');
 const vm = require('vm');
 
 /* ---- SITE SETTINGS: change SITE to the real domain before going live ---- */
-const SITE = 'https://www.bokaseafood.com';        // ← your domain, no trailing slash
+const SITE = 'https://www.bokaseafood.com';
+const LANGS = {
+  en: { idx: 0, path: '/', dir: '', root: '', html: 'en', hreflang: 'en', og: 'en_GB', menu: 'Menu' },
+  me: { idx: 1, path: '/me/', dir: 'me', root: '../', html: 'sr-Latn-ME', hreflang: 'sr-ME', og: 'sr_ME', menu: 'Meni' },
+  ru: { idx: 2, path: '/ru/', dir: 'ru', root: '../', html: 'ru', hreflang: 'ru', og: 'ru_RU', menu: 'Меню' },
+};        // ← your domain, no trailing slash
 const RESTAURANT = {
   name: 'Boka Seafood',
   phone: '+382 67 480 655',
@@ -45,9 +50,10 @@ const price = (it) => (typeof it.price === 'number' ? it.price.toFixed(2) + ' �
 
 function build(lang) {
   const T = (k) => (I18N[lang] && I18N[lang][k]) || I18N.en[k] || '';
-  const L = lang === 'me' ? 1 : 0;
-  const root = lang === 'me' ? '../' : '';
-  const url = SITE + (lang === 'me' ? '/me/' : '/');
+  const C = LANGS[lang];
+  const L = C.idx;
+  const root = C.root;
+  const url = SITE + C.path;
   let h = template;
 
   /* 1. texts */
@@ -71,8 +77,8 @@ function build(lang) {
     }).join('') + b);
 
   /* 3. language buttons, html lang, paths */
-  h = h.replace('<html lang="en" class="no-js">', `<html lang="${lang === 'me' ? 'sr-Latn-ME' : 'en'}" class="no-js" data-root="${root}">`);
-  h = h.replace(/<button type="button" data-lang="(en|me)" aria-pressed="(true|false)">/g,
+  h = h.replace('<html lang="en" class="no-js">', `<html lang="${C.html}" class="no-js" data-root="${root}">`);
+  h = h.replace(/<button type="button" data-lang="(en|me|ru)" aria-pressed="(true|false)">/g,
     (m, l) => `<button type="button" data-lang="${l}" aria-pressed="${l === lang}">`);
   h = h.replace(/(<a class="skip" href="#main"[^>]*>)/, '$1');
   if (root) h = h.replace(/(\s(?:src|href|content|data-src|poster))="(images\/|css\/|js\/)/g, `$1="${root}$2`);
@@ -104,7 +110,7 @@ function build(lang) {
     areaServed: ['Risan', 'Perast', 'Kotor', 'Bay of Kotor'],
     sameAs: [RESTAURANT.instagram],
     hasMenu: {
-      '@type': 'Menu', name: L ? 'Meni' : 'Menu', url: url + '#menu', inLanguage: lang === 'me' ? 'sr-Latn-ME' : 'en',
+      '@type': 'Menu', name: C.menu, url: url + '#menu', inLanguage: C.html,
       hasMenuSection: MENU.map((c) => ({
         '@type': 'MenuSection', name: c.title[L],
         hasMenuItem: c.items.map((i) => ({
@@ -118,8 +124,7 @@ function build(lang) {
   if (RESTAURANT.openingHours.length) ld.openingHours = RESTAURANT.openingHours;
   const head = `
   <link rel="canonical" href="${url}">
-  <link rel="alternate" hreflang="en" href="${SITE}/">
-  <link rel="alternate" hreflang="sr-ME" href="${SITE}/me/">
+  ${Object.values(LANGS).map((x) => `<link rel="alternate" hreflang="${x.hreflang}" href="${SITE}${x.path}">`).join('\n  ')}
   <link rel="alternate" hreflang="x-default" href="${SITE}/">
   <meta property="og:type" content="restaurant">
   <meta property="og:site_name" content="Boka Seafood">
@@ -127,7 +132,7 @@ function build(lang) {
   <meta property="og:description" content="${attr(desc)}">
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${SITE}/images/boka-hero.jpg">
-  <meta property="og:locale" content="${lang === 'me' ? 'sr_ME' : 'en_GB'}">
+  <meta property="og:locale" content="${C.og}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="apple-touch-icon" href="${root}images/logo.png">
   <script type="application/ld+json">${JSON.stringify(ld)}</script>
@@ -137,19 +142,20 @@ function build(lang) {
 }
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), build('en'));
-fs.mkdirSync(path.join(ROOT, 'me'), { recursive: true });
-fs.writeFileSync(path.join(ROOT, 'me/index.html'), build('me'));
+for (const l of ['me', 'ru']) {
+  fs.mkdirSync(path.join(ROOT, l), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, l, 'index.html'), build(l));
+}
 const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${['/', '/me/'].map((u) => `  <url>
+${Object.values(LANGS).map((x) => x.path).map((u) => `  <url>
     <loc>${SITE}${u}</loc>
     <lastmod>${today}</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="${SITE}/"/>
-    <xhtml:link rel="alternate" hreflang="sr-ME" href="${SITE}/me/"/>
+${Object.values(LANGS).map((x) => `    <xhtml:link rel="alternate" hreflang="${x.hreflang}" href="${SITE}${x.path}"/>`).join('\n')}
     <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}/"/>
   </url>`).join('\n')}
 </urlset>
 `);
 fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /src/\nDisallow: /tools/\n\nSitemap: ${SITE}/sitemap.xml\n`);
-console.log('Built index.html, me/index.html, sitemap.xml, robots.txt for', SITE);
+console.log('Built index.html, me/index.html, ru/index.html, sitemap.xml, robots.txt for', SITE);

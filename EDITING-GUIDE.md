@@ -14,8 +14,8 @@ boka-seafood/
 
 ## 0. Two language pages (important for Google)
 
-The site has two real pages: `/` (English) and `/me/` (Montenegrin). Google indexes both separately.
-They are **generated** from `src/template.html` + `js/i18n.js` + `js/menu.js`. After changing text, the menu or the layout, run:
+The site has three real pages: `/` (English), `/me/` (Montenegrin) and `/ru/` (Russian). Google indexes both separately.
+They are **generated** (texts in `js/i18n.js`: en / me / ru; menu entries are `[English, Montenegrin, Russian]`) from `src/template.html` + `js/i18n.js` + `js/menu.js`. After changing text, the menu or the layout, run:
 
 ```
 node tools/build.js
